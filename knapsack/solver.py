@@ -21,13 +21,11 @@ def dynamic_programming(items, capacity):
 
     where k is remaining capacity and j is the item number
     """
-
     # Initialise the DP table
     table = np.zeros((capacity+1, len(items)+1))
     
     # Iterate over Item list
     for item in items:
-        print(item.index)
         j = item.index+1
 	# Initialise the current item column as the previous one
         table[:,j] = table[:,j-1]
@@ -37,21 +35,24 @@ def dynamic_programming(items, capacity):
         if item.weight > capacity:
             continue
 
-        for k in range(0, capacity):
+        for k in range(0, capacity+1):
             # Check if this item fits at this k capacity
             if item.weight > k:
                 continue
 
             # Check if the previous value in the left column is the same or
             # better
-            if item.value <= table[k,j]:
+            if item.value <= table[k,j-1]:
                 continue
 
             # At this point, take the value of the current item + the total
             # value of the left over capacity in the previous column
-            table[k,j] = item.value + table[k-item.weight,j]
+            table[k,j] = item.value + table[k-item.weight,j-1]
     
-    print(table)
+    # Traceback optimal solution
+    j = len(items)-1
+    decision_list = zeros(len(items))
+    
 
 def solve_it(input_data):
     # Modify this code to run your optimization algorithm
