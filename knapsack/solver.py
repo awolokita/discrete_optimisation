@@ -42,17 +42,25 @@ def dynamic_programming(items, capacity):
 
             # Check if the previous value in the left column is the same or
             # better
-            if item.value <= table[k,j-1]:
-                continue
-
-            # At this point, take the value of the current item + the total
-            # value of the left over capacity in the previous column
-            table[k,j] = item.value + table[k-item.weight,j-1]
+            val = item.value + table[k-item.weight,j-1]
+            if val > table[k,j-1]:
+                table[k,j] = val
     
     # Traceback optimal solution
-    j = len(items)-1
-    decision_list = zeros(len(items))
-    
+    j = len(items)
+    k = capacity
+    decision_list = np.zeros(len(items))
+    value = table[k,j]
+    while j > 0:
+        # Check if we have chosen this item
+        if table[k,j] > table [k,j-1]:
+            decision_list[j-1] = 1
+            k = k - items[j-1].weight
+        j = j-1
+
+    #print(table)
+    return (value, decision_list)
+
 
 def solve_it(input_data):
     # Modify this code to run your optimization algorithm
@@ -71,13 +79,13 @@ def solve_it(input_data):
         parts = line.split()
         items.append(Item(i-1, int(parts[0]), int(parts[1])))
 
-    dynamic_programming(items, capacity)
+    value, taken = dynamic_programming(items, capacity)
 
     # a trivial greedy algorithm for filling the knapsack
     # it takes items in-order until the knapsack is full
-    value = 0
-    weight = 0
-    taken = [0]*len(items)
+    #value = 0
+    #weight = 0
+    #taken = [0]*len(items)
 
 
 #    for item in items:
@@ -87,9 +95,9 @@ def solve_it(input_data):
 #            weight += item.weight
     
     # prepare the solution in the specified output format
-#    output_data = str(value) + ' ' + str(0) + '\n'
-#    output_data += ' '.join(map(str, taken))
-#    return output_data
+    output_data = str(int(value)) + ' ' + str(1) + '\n'
+    output_data += ' '.join(map(str, [int(x) for x in taken]))
+    return output_data
 
 
 if __name__ == '__main__':
