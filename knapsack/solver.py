@@ -160,7 +160,6 @@ def dynamic_programming(items, capacity):
     #print(table)
     return (value, [int(x) for x in decision_list])
 
-
 def solve_it(input_data):
     # Modify this code to run your optimization algorithm
 
@@ -181,21 +180,23 @@ def solve_it(input_data):
         density = float(value) / float(weight)
         items.append(Item(i-1, value, weight, density))
     
-    t1 = perf_counter()
-    value, taken = dynamic_programming(items, capacity)
-    t2 = perf_counter()
-    dp_time = t2-t1
 
-    t1 = perf_counter()
-    value, taken = binary_search(items, capacity)
-    t2 = perf_counter()
-    bs_time = t2-t1
+    # Make the decision whether to use dynamic programming or binary search
+    #estimated_dp_mem_mb = ((len(items) * float(capacity) * 8)/1000000)
+    estimated_dp_mem_mb = 8000
+    if estimated_dp_mem_mb < 4000:
+        #t1 = perf_counter()
+        value, taken = dynamic_programming(items, capacity)
+        #t2 = perf_counter()
+        #dp_time = t2-t1
+    else:
+        #t1 = perf_counter()
+        value, taken = binary_search(items, capacity)
+        #t2 = perf_counter()
+        #bs_time = t2-t1
 
-    print('dp_time='+str(dp_time)+' bs_time='+str(bs_time))
+    #print('dp_time='+str(dp_time)+' bs_time='+str(bs_time))
 
-    #print('BINARY SEARCH')
-    #print(value)
-    #print(taken)
     # a trivial greedy algorithm for filling the knapsack
     # it takes items in-order until the knapsack is full
     #value = 0
@@ -211,7 +212,7 @@ def solve_it(input_data):
     
     # prepare the solution in the specified output format
     output_data = str(int(value)) + ' ' + str(1) + '\n'
-    output_data += ' '.join(map(str, [int(x) for x in taken]))
+    output_data += ' '.join(map(str, taken))
     return output_data
 
 
